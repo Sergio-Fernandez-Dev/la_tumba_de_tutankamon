@@ -1,3 +1,4 @@
+const doButton = document.getElementById('do');
 const levels = [
     [0][0] = 'Al fin has llegado a la puerta de la pirámide. La roca que tapaba la puerta está entreabierta y las ascuas de una hoguera reciente indica que alguien ha pasado allí la noche. Parece que los ladrones de tumbas se te han vuelto a adelantar.',
     [0][1] = 'El interior de la piramide está oscuro. Palpando la pared tocas algo que parece una antorcha.', 
@@ -17,11 +18,38 @@ const levels = [
     [3][3] = 'Al adentrarte más en la habitación secreta, observas un pequeño altar. Tras él, hay un soporte cilíndrico anclado a la pared.',
 ];
 
-// const descriptions = [
-//     'Al fin has llegado a la puerta de la pirámide. La roca que tapaba la puerta está entreabierta y las ascuas de una hoguera reciente indica que alguien ha pasado allí la noche. Parece que los ladrones de tumbas se te han vuelto a adelantar.',
-//     'El interior de la piramide está oscuro. Palpando la pared tocas algo que parece una antorcha.',
-//     'Bajo la luz de la antorcha puedes ver que te encuentras ante un largo pasillo. En la pared hay un pequeño trozo de papiro, parece que los ladrones no fueron muy cuidadosos.',
-//     'Al avanzar por el pasillo, la luz de la antorcha ilumina las paredes llenas de jeroglíficos.',
-//     'Te encuentras de frente con una pared. A lo lejos aún se puede ver la luz tenue de la entrada. El pasillo parece girar a la derecha.'
-    
-// ]
+const commands = new Map([
+    ['mirar', true],
+    ['coger', true],
+    ['usar', true],
+    ['ir', true],
+]);
+
+doButton.onclick = () => {
+    const inputValue = document.getElementById('commands').value;
+    const output = document.getElementById('description');
+    const words = splitWords(inputValue.toLowerCase());
+    if (!checkIfWordExist(words[0], commands)) {
+        output.innerHTML = sendWarning();
+    }
+}
+
+function splitWords(text) {
+    let separatedWords = text.split(' ');
+    return separatedWords;
+}
+
+
+function checkIfWordExist(wordToCompare, wordList) {
+    let wordExists = false;
+    wordList.forEach(currentWord => {
+        if (currentWord == wordToCompare) {
+            wordExists = true;
+        }
+        return wordExists;
+    });
+}
+
+function sendWarning() {
+    return 'Acción no permitida. Por favor, utilice "mirar", "coger","usar" o "ir".'
+}
