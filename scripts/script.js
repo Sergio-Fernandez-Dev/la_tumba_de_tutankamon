@@ -25,15 +25,33 @@ const commands = new Map([
     ['ir', true],
 ]);
 
+const objects = new Map([
+    ['ascuas', false],
+    ['carbón', false],
+    ['lino', false],
+    ['antorcha', false],
+    ['mapa', false],
+    ['bastón', false],
+    ['fresco', false],
+    ['soporte', false],
+    ['baúl', false],
+    ['ladrillo', false],
+    ['cuerda', false],
+    ['cerradura', false],
+]);
+
 doButton.onclick = () => {
     const inputValue = document.getElementById('commands').value;
     const output = document.getElementById('description');
     const words = splitWords(inputValue.toLowerCase());
     if (!checkIfWordExist(words[0], commands)) {
-        output.innerHTML = sendWarning();
+        output.innerHTML = sendWarning(0);
         return;
     }
-    output.innerHTML = 'Todo correcto';
+    if (!checkIfWordExist(words[1], objects)) {
+        output.innerHTML = sendWarning(1);
+        return;
+    }
 }
 
 function splitWords(text) {
@@ -49,6 +67,10 @@ function checkIfWordExist(wordToCompare, wordList) {
     return false;
 }
 
-function sendWarning() {
-    return 'Acción no permitida. Por favor, utilice "mirar", "coger","usar" o "ir".'
+function sendWarning(index) {
+    let warnings = [
+        'Acción no permitida. Por favor, utilice "mirar", "coger","usar" o "ir".',
+        'El objeto no existe',
+    ];
+    return warnings[index];
 }
