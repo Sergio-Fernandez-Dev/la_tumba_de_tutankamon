@@ -44,12 +44,16 @@ doButton.onclick = () => {
     const inputValue = document.getElementById('commands').value;
     const output = document.getElementById('description');
     const words = splitWords(inputValue.toLowerCase());
-    if (!checkIfWordExist(words[0], commands)) {
-        output.innerHTML = sendWarning(0);
+    const p = document.createElement('p');
+    const date = new Date();
+    if (!checkIfWordExist(words[0], commands)) { 
+        output.appendChild(p).style.color = 'red';
+        p.innerHTML = date.toLocaleTimeString() + ' >> ' + sendWarning(0);
         return;
     }
     if (!checkIfWordExist(words[1], objects)) {
-        output.innerHTML = sendWarning(1);
+        output.appendChild(p);
+        p.innerHTML = date.toLocaleTimeString()  + ' >> ' + sendWarning(1);
         return;
     }
 }
@@ -72,5 +76,5 @@ function sendWarning(index) {
         'Acción no permitida. Por favor, utilice "mirar", "coger","usar" o "ir".',
         'El objeto no existe',
     ];
-    return warnings[index];
+    return warnings[index]
 }
