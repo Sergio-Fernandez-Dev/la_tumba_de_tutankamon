@@ -31,7 +31,9 @@ doButton.onclick = () => {
     const words = splitWords(inputValue.toLowerCase());
     if (!checkIfWordExist(words[0], commands)) {
         output.innerHTML = sendWarning();
+        return;
     }
+    output.innerHTML = 'Todo correcto';
 }
 
 function splitWords(text) {
@@ -41,13 +43,10 @@ function splitWords(text) {
 
 
 function checkIfWordExist(wordToCompare, wordList) {
-    let wordExists = false;
-    wordList.forEach(currentWord => {
-        if (currentWord == wordToCompare) {
-            wordExists = true;
-        }
-        return wordExists;
-    });
+    if (wordList.has(wordToCompare)) {
+        return true;
+    }
+    return false;
 }
 
 function sendWarning() {
