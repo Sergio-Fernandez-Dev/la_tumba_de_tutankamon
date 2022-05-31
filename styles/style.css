@@ -32,9 +32,15 @@ body {
 #description {
     display: block;
     width: 80vw;
+    height: 50vh;
     border: 2px solid #ffffff;
     padding: 20px;
     margin: 20px auto;
+    overflow-y: auto;
+}
+
+#description p {
+    bottom: 35px;
 }
 
 label {
@@ -43,4 +49,9 @@ label {
     text-align: center;
     margin: auto;
 }
+
+.warning {
+    color: red;
+}
+
 
