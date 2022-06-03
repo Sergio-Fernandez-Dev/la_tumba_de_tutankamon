@@ -12,18 +12,99 @@ const firstLine = document.getElementById('first_line');
 firstLine.innerHTML = getCurrentTime() + currentLevel.description;
 doButton.onclick = executeCommands;
 
+function executeCommands() {
+    const words = getInputText();
+
+    if (!checkIfWordExist(words[0], actions)) { 
+        return printInDescription(sendWarning(0), true);
+    }
+    if (words[0] === 'ir') {
+        const direction = words[1];
+
+        if(!checkIfDirectionIsValid(direction, currentLevel)) {
+            return printInDescription(sendWarning(2), true);
+        }
+        movePlayer(direction, player);
+        return printInDescription(currentLevel.description);
+    }
+    if (!checkIfWordExist(words[1], objects)) {
+        return printInDescription(sendWarning(1), true);   
+    }
+}
+
 function checkIfWordExist(wordToCompare, wordList) {
     return wordList.has(wordToCompare) ? true : false;
 }
 
 function checkIfDirectionIsValid(direction, level) {
-    let availableDirections = level.exits;
- 
-    return availableDirections.includes(direction) ? true : false;
+    return level.exits.includes(direction) ? true : false;
 }
 
 function checkIfExitExists(direction, exit) {
     return exit.includes(direction);
+}
+
+function getCurrentTime() {
+    const date = new Date();
+
+    return date.toLocaleTimeString() + ' >> ' ;
+}
+
+function getInputText() {
+    const inputValue = document.getElementById('commands').value;
+    const words = splitWords(inputValue.toLowerCase());
+
+    return words;
+}
+
+
+
+function movePlayer(direction) {
+    switch (direction) {
+        case 'n':
+            player.position[0]--;
+            currentLevel = levels[player.position[0]][player.position[1]];
+            break
+        case 's':
+            player.position[0]++;
+            currentLevel = levels[player.position[0]][player.position[1]];
+            break;
+        case 'e':
+            player.position[1]++;
+            currentLevel = levels[player.position[0]][player.position[1]];
+            break;
+        case 'o':
+            player.position[1]--;
+            currentLevel = levels[player.position[0]][player.position[1]];  
+            break;
+        default:
+            break;
+    }
+}
+
+function printInDescription(description, warning = false) {
+    const p = document.createElement('p');
+    const output = document.getElementById('description');
+    output.appendChild(p);
+
+    if (warning) {
+        p.classList.add('warning');
+    }
+    p.innerHTML = getCurrentTime() + description;
+}
+
+function sendWarning(index) {
+    let warnings = [
+        'Acción no permitida. Por favor, utilice "mirar", "coger","usar" o "ir".',
+        'El objeto no existe',
+        'No puedes ir en esa dirección',
+    ];
+    return warnings[index]
+}
+
+function splitWords(text) {
+    let separatedWords = text.split(' ');
+    return separatedWords;
 }
 
 function defineActions(direction, player) {
@@ -56,48 +137,12 @@ function defineObjects() {
     return objects;
 }
 
-function executeCommands() {
-    const words = getInputText();
-    if (!checkIfWordExist(words[0], actions)) { 
-        printInDescription(sendWarning(0), true);
-
-        return;
-    }
-
-    if (words[0] === 'ir') {
-        const direction = words[1];
-
-        if(!checkIfDirectionIsValid(direction, currentLevel)) {
-            return printInDescription(sendWarning(2), true);
-        }
-        movePlayer(direction, player);
-        return printInDescription(currentLevel.description);
-    }
-    if (!checkIfWordExist(words[1], objects)) {
-        printInDescription(sendWarning(1), true);
-       
-        return;
-    }
-}
-
-function getCurrentTime() {
-    const date = new Date();
-    return date.toLocaleTimeString() + ' >> ' ;
-}
-
-function getInputText() {
-    const inputValue = document.getElementById('commands').value;
-    const words = splitWords(inputValue.toLowerCase());
-
-    return words;
-}
-
 function initMap() {
     const levels = [
         [0,1,2,3],
         [0,1,2,3],
         [0,1,2,3],
-        [0,1,2,3]
+        [0,1,2,3],
     ];
 
     levels[0][0] = {
@@ -166,52 +211,4 @@ function initMap() {
     };
 
     return levels;
-}
-
-function movePlayer(direction) {
-    switch (direction) {
-        case 'n':
-            player.position[0]--;
-            currentLevel = levels[player.position[0]][player.position[1]];
-            break
-        case 's':
-            player.position[0]++;
-            currentLevel = levels[player.position[0]][player.position[1]];
-            break;
-        case 'e':
-            player.position[1]++;
-            currentLevel = levels[player.position[0]][player.position[1]];
-            break;
-        case 'o':
-            player.position[1]--;
-            currentLevel = levels[player.position[0]][player.position[1]];  
-            break;
-        default:
-            break;
-    }
-}
-
-function printInDescription(description, warning = false) {
-    const p = document.createElement('p');
-    const output = document.getElementById('description');
-    output.appendChild(p);
-
-    if (warning) {
-        p.classList.add('warning');
-    }
-    p.innerHTML = getCurrentTime() + description;
-}
-
-function sendWarning(index) {
-    let warnings = [
-        'Acción no permitida. Por favor, utilice "mirar", "coger","usar" o "ir".',
-        'El objeto no existe',
-        'No puedes ir en esa dirección',
-    ];
-    return warnings[index]
-}
-
-function splitWords(text) {
-    let separatedWords = text.split(' ');
-    return separatedWords;
 }
